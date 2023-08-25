@@ -77,7 +77,7 @@ if __name__ == '__main__':
     root.wm_attributes("-alpha", 1)
     # Turn off the window shadow
     # root.wm_attributes("-transparentcolor", "#000000")
-    title = "AutoClick"
+    title = "EyeGaze"
     root.title(title)
     root.geometry("{0}x{1}+0+0".format(root.winfo_screenwidth(), root.winfo_screenheight()))
     root.config(bg='#FFFFFF')
