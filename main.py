@@ -74,13 +74,13 @@ if __name__ == '__main__':
     root = tk.Tk()
     # Make the root window always on top
     root.wm_attributes("-topmost", True)
-    root.wm_attributes("-alpha", 0)
+    root.wm_attributes("-alpha", 1)
     # Turn off the window shadow
-    root.wm_attributes("-transparentcolor", "#000000")
+    # root.wm_attributes("-transparentcolor", "#000000")
     title = "AutoClick"
     root.title(title)
     root.geometry("{0}x{1}+0+0".format(root.winfo_screenwidth(), root.winfo_screenheight()))
-    root.config(bg='#000000')
+    root.config(bg='#FFFFFF')
 
     ico = ImageTk.PhotoImage(Image.open(resource_path('ico.ico')))
     root.iconphoto(False, ico)
@@ -93,7 +93,7 @@ if __name__ == '__main__':
     label1.place(relx=random.random(), rely=random.random(), anchor='center')
 
     set_click_through(label1.winfo_id())
-    root.wm_attributes("-alpha", 0.5)
+    root.wm_attributes("-alpha", 0.7)
 
     camera = cv2.VideoCapture(0)
     output_dir = 'images'
