@@ -12,10 +12,13 @@ import win32con
 import win32gui
 from PIL import ImageTk, Image
 
+from sync import sync
+
 screen_width = 1920
 screen_height = 1080
-last_take_time = 0
 take_photo_interval = 0.1
+
+_last_take_time = 0
 
 
 def get_random_id():
@@ -48,9 +51,9 @@ def get_mouse_loc():
 
 
 def take_photo():
-    global last_take_time, take_photo_interval
-    if time.time() - last_take_time > take_photo_interval:
-        last_take_time = time.time()
+    global _last_take_time, take_photo_interval
+    if time.time() - _last_take_time > take_photo_interval:
+        _last_take_time = time.time()
 
         print(f"Current {get_mouse_loc()}\t", end='')
         _, frame = camera.read()
@@ -68,10 +71,16 @@ def exit_app():
     os._exit(0)
 
 
-def task():
+def widget_follow_mouse(widget):
     while True:
         data = mouse.get_position()
-        label1.place(relx=float(data[0] / screen_width), rely=float(data[1] / screen_height), anchor='center')
+        widget.place(
+            relx=float(data[0] / screen_width),
+            rely=float(data[1] / screen_height),
+            anchor='center',
+            width=22,
+            height=22
+        )
         time.sleep(1 / 120)
 
 
@@ -80,23 +89,45 @@ if __name__ == '__main__':
     output_dir = 'images'
     os.makedirs(output_dir, exist_ok=True)
 
+
+    def create_grid(event=None):
+        spacing = 50
+        w = c.winfo_width()  # Get current width of canvas
+        h = c.winfo_height()  # Get current height of canvas
+        c.delete('grid_line')  # Will only remove the grid_line
+
+        # Creates all vertical lines at intervals of 100
+        for i in range(0, w, spacing):
+            c.create_line([(i, 0), (i, h)], tag='grid_line')
+
+        # Creates all horizontal lines at intervals of 100
+        for i in range(0, h, spacing):
+            c.create_line([(0, i), (w, i)], tag='grid_line')
+
+
     root = tk.Tk()
+
+    c = tk.Canvas(root, bg='#333333')
+    c.pack(fill=tk.BOTH, expand=True)
+    c.bind('<Configure>', create_grid)
+
     root.wm_attributes("-topmost", True)
     root.wm_attributes("-alpha", 1)
     root.title("EyeGaze")
     root.geometry("{0}x{1}+0+0".format(root.winfo_screenwidth(), root.winfo_screenheight()))
-    root.config(bg='#FFFFFF')
+    root.config(bg='#000000')
     ico = ImageTk.PhotoImage(Image.open(resource_path('ico.ico')))
     root.iconphoto(False, ico)
     root.wm_attributes('-fullscreen', 'True')
-    root.wm_attributes("-alpha", 0.7)
+    root.wm_attributes("-alpha", 0.8)
 
-    label1 = tk.Label(root, text=f'X', fg='blue', font=('helvetica', 16, 'bold'), justify=tk.CENTER)
-    set_click_through(label1.winfo_id())
+    label = tk.Label(root, text=f'X', fg='blue', font=('helvetica', 16, 'bold'), justify=tk.CENTER)
+    set_click_through(label.winfo_id())
 
-    Thread(target=task).start()
+    Thread(target=widget_follow_mouse, args=(label,)).start()
 
     keyboard.add_hotkey('SPACE', capture)
+    keyboard.add_hotkey('CTRL+S', sync)
     keyboard.add_hotkey('ESC', exit_app)
 
     root.mainloop()
