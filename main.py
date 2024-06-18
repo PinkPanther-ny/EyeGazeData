@@ -1,6 +1,7 @@
 import os
 import sys
 import time
+import random
 import tkinter as tk
 from threading import Thread
 
@@ -57,7 +58,14 @@ def take_photo():
 
         print(f"Current {get_mouse_loc()}\t", end='')
         _, frame = camera.read()
-        filename = f"{output_dir}/{get_mouse_loc()}_{get_random_id()}.jpg"
+        
+        # Decide whether to save to train or val
+        if random.random() < 0.9:
+            subdir = 'train'
+        else:
+            subdir = 'val'
+        
+        filename = f"{output_dir}/{subdir}/{get_mouse_loc()}_{get_random_id()}.jpg"
         cv2.imwrite(filename, frame)
 
         print("Saved!")
@@ -87,8 +95,8 @@ def widget_follow_mouse(widget):
 if __name__ == '__main__':
     camera = cv2.VideoCapture(0)
     output_dir = 'images'
-    os.makedirs(output_dir, exist_ok=True)
-
+    os.makedirs(os.path.join(output_dir, 'train'), exist_ok=True)
+    os.makedirs(os.path.join(output_dir, 'val'), exist_ok=True)
 
     def create_grid(event=None):
         spacing = 50

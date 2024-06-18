@@ -7,7 +7,7 @@ screen_width = 1920
 screen_height = 1080
 
 # Directory containing images
-image_dir = 'images'
+image_dir = 'images/train'
 
 # Initialize a list to store the coordinates
 coordinates = []
