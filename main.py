@@ -13,7 +13,6 @@ import win32con
 import win32gui
 from PIL import ImageTk, Image
 
-from sync import sync
 
 screen_width = 1920
 screen_height = 1080
@@ -180,7 +179,6 @@ if __name__ == '__main__':
     root.after(0, update_frame_and_mouse)
 
     keyboard.add_hotkey('SPACE', capture)
-    keyboard.add_hotkey('CTRL+S', sync)
     keyboard.add_hotkey('ESC', exit_app)
 
     root.mainloop()
