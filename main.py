@@ -58,7 +58,7 @@ def convert_cv2_to_tkinter_image(cv2_img):
     pil_img = Image.fromarray(cv2_img_rgb).convert("RGBA")
     
     # Create transparency
-    alpha = 68  # Half transparent
+    alpha = 255  # transparency
     alpha_channel = Image.new('L', pil_img.size, alpha)
     pil_img.putalpha(alpha_channel)
     
@@ -161,7 +161,7 @@ if __name__ == '__main__':
     ico = ImageTk.PhotoImage(Image.open(resource_path('ico.ico')))
     root.iconphoto(False, ico)
     root.wm_attributes('-fullscreen', 'True')
-    root.wm_attributes("-alpha", 0.75)
+    root.wm_attributes("-alpha", 0.85)
 
     c = tk.Canvas(root, bg='#333333')
     c.pack(fill=tk.BOTH, expand=True)
